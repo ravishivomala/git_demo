@@ -1,0 +1,20 @@
+# mkdir :create directory
+#cd :go into directory
+cd ..:it goes one directory back
+ls: listing 
+ll : long listing
+cd /:go to root directory
+cd ~: go to your home directory
+pwd : it says where you are
+sudu su -:it goes to root 
+touch : create file
+< vi : enter the soyrce insert mode
+<cat (file name):displays what inside 
+< rm - rf:remove directory
+
+< nodes:
+<ls -i (filename):stores metadata in linux file
+softlink:-ls -s <target><linkname>
+hardlink:-ln <orginal fil>
+cp -r :- copy directory
+ls -ls: list all files
