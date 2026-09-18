@@ -1,0 +1,192 @@
+# giveuser permission : setfacl -m u:john:rw file
+# group permission: setfacl -m g:devops:rwx file
+# view acl: getfacl file
+# remove user acl: setfacl -x u:john file
+# remove group acl :setfacl -x g:devops file
+# remove allextended acl: setfacl -b file
+# set acl mask: setfacl -m m:rwx file
+
+Shared DevOps Project Directory Using ACL:-
+<> ravi
+john
+kumar
+
+<> /opt/devops-project
+
+Requirements:
+User	Access
+ravi	Read + Write + Execute
+john	Read + Write
+kumar	Read only
+
+Step 1 — Create the project directory:-
+sudo mkdir -p /opt/devops-project
+ls -ld /opt/devops-project
+Step 2 — Create a project file:-
+sudo touch /opt/devops-project/app.txt
+echo "DevOps application configuration" | sudo tee /opt/devops-project/app.txt
+cat /opt/devops-project/app.txt
+DevOps application configuration
+
+Step 3 — Create users
+If john and kumar don't exist:--
+sudo useradd john
+sudo useradd kumar
+id john
+id kumar
+Step 4 — Give normal ownership to Ravi
+For this practice, we'll make Ravi the owner:-
+sudo chown ravi:ravi /opt/devops-project
+sudo chown ravi:ravi /opt/devops-project/app.txt
+ls -l /opt/devops-project
+-rw-r--r-- 1 ravi ravi app.txt
+
+Step 5 — Give John access using ACL:-
+
+john → read + write
+sudo setfacl -m u:john:rw /opt/devops-project/app.txt
+setfacl
+   ↓
+ACL command
+
+-m
+   ↓
+modify ACL
+
+u:john
+   ↓
+user named john
+
+rw
+   ↓
+read + write
+
+app.txt
+   ↓
+file
+Step 6 — Give Kumar read-only access:-
+
+sudo setfacl -m u:kumar:r /opt/devops-project/app.txt
+john  → rw
+kumar → r
+
+Step 7 — Verify the ACL:-
+
+getfacl /opt/devops-project/app.txt
+
+
+# file: app.txt
+# owner: ravi
+# group: ravi
+user::rw-
+user:john:rw-
+user:kumar:r--
+group::r--
+mask::rw-
+other::r--
+user:john:rw-
+user:kumar:r--
+
+user:john:rw-
+user:kumar:r--
+Step 8 — Test John's access
+Switch to John:
+su - john
+cat /opt/devops-project/app.txt
+John should be able to read the file.
+Now try:
+echo "John updated the application" >> /opt/devops-project/app.txt
+John should be able to write because we gave him:
+rw
+Check:
+cat /opt/devops-project/app.txt
+You should see:
+DevOps application configuration
+John updated the application
+Exit John:
+exit
+Step 9 — Test Kumar's access
+Switch to Kumar:
+su - kumar
+Read the file:
+cat /opt/devops-project/app.txt
+Kumar should be able to read it.
+Now try:
+echo "Kumar changed the file" >> /opt/devops-project/app.txt
+This should fail with a permission error because Kumar has only:
+r--
+Exit:
+exit
+Step 10 — Test Ravi
+Ravi is the owner.
+Switch to Ravi:
+su - ravi
+Check:
+cat /opt/devops-project/app.txt
+Ravi can read/write according to the normal owner permissions.
+Step 11 — Remove John's ACL
+Suppose John no longer works on the project.
+Remove his ACL:
+sudo setfacl -x u:john /opt/devops-project/app.txt
+Notice:
+Don't write rw here.
+Correct:
+setfacl -x u:john file
+Then verify:
+getfacl /opt/devops-project/app.txt
+The line:
+user:john:rw-
+should be gone.
+Step 12 — Remove all ACL entries
+If you want to remove the additional ACL entries:
+sudo setfacl -b /opt/devops-project/app.txt
+Then:
+getfacl /opt/devops-project/app.txt
+Now the named user entries should be gone.
+The complete project flow
+You can practice this as a sequence:
+# 1. Create directory
+sudo mkdir -p /opt/devops-project
+
+# 2. Create file
+sudo touch /opt/devops-project/app.txt
+
+# 3. Add content
+echo "DevOps application configuration" | sudo tee /opt/devops-project/app.txt
+
+# 4. Create users
+sudo useradd john
+sudo useradd kumar
+
+# 5. Give Ravi ownership
+sudo chown ravi:ravi /opt/devops-project
+sudo chown ravi:ravi /opt/devops-project/app.txt
+
+# 6. Give John read/write
+sudo setfacl -m u:john:rw /opt/devops-project/app.txt
+
+# 7. Give Kumar read-only
+sudo setfacl -m u:kumar:r /opt/devops-project/app.txt
+
+# 8. Check ACL
+getfacl /opt/devops-project/app.txt
+
+# 9. Remove John's ACL later
+sudo setfacl -x u:john /opt/devops-project/app.txt
+
+# 10. Remove all ACL entries
+sudo setfacl -b /opt/devops-project/app.txt
+What you're actually learning
+                    app.txt
+                       │
+             ┌─────────┼─────────┐
+             ↓         ↓         ↓
+           Ravi       John      Kumar
+           owner       ACL       ACL
+             │          │         │
+            rw-        rw-       r--
+             │          │         │
+             ↓          ↓         ↓
+          Full       Read +     Read
+          owner      Write      only
+          access     access     access
