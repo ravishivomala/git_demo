@@ -1,0 +1,121 @@
+🔹 Setup
+git --version
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+git config --global --list
+🔹 Create / Clone Repository
+git init
+git clone <github-url>
+🔹 Check Repository
+git status
+git log
+git log --oneline
+git diff
+🔹 Add & Commit
+git add .
+git add <filename>
+git commit -m "commit message"
+🔹 GitHub Remote
+git remote -v
+git remote add origin <github-url>
+git remote remove origin
+🔹 Push & Pull
+git push
+git push -u origin main
+git pull
+git pull origin main
+🔹 Branches
+git branch                    # Show local branches
+git branch -a                 # Show local + remote branches
+git branch <branch-name>      # Create branch
+git switch <branch-name>      # Switch branch
+git switch -c <branch-name>   # Create + switch
+git branch -m <new-name>      # Rename current branch
+git branch -d <branch-name>   # Delete local branch
+git branch -D <branch-name>   # Force delete local branch
+🔹 Merge
+git switch main
+git merge devops
+git push origin main
+🔹 Remote Branch
+git push -u origin devops
+git push origin --delete devops
+🔹 Undo / Restore
+git restore <filename>
+git restore --staged <filename>
+git reset HEAD <filename>
+🔹 Useful History
+git log
+git log --oneline
+git show <commit-id>
+git diff
+git diff --staged
+⭐ Most-used workflow
+# First time
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin <github-url>
+git push -u origin main
+
+# Daily work
+git status
+git add .
+git commit -m "Update code"
+git push
+
+# Branch work
+git switch -c devops
+git add .
+git commit -m "Add devops changes"
+git push -u origin devops
+
+# Merge branch
+git switch main
+git merge devops
+git push
+
+# Delete branch
+git branch -d devops
+git push origin --delete devops
+
+# Get GitHub changes
+git pull
+Remember this flow
+CREATE
+  ↓
+git init
+  ↓
+git add .
+  ↓
+git commit
+  ↓
+git push
+  ↓
+GITHUB
+
+BRANCH
+  ↓
+git switch -c devops
+  ↓
+edit → add → commit → push
+  ↓
+git switch main
+  ↓
+git merge devops
+  ↓
+git push
+
+<>The 10 commands you should know first:
+
+git init
+git clone
+git status
+git add .
+git commit
+git push
+git pull
+git branch
+git switch
+git merge
